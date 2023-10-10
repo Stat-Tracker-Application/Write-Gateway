@@ -1,0 +1,11 @@
+{
+  "name": "write-gateway",
+  "version": "1.0.0",
+  "description": "The gateway that handels and redirects all write requests for the stat tracker applicaton",
+  "main": "./Gateway/Gateway.js",
+  "scripts": {
+    "test": "Test"
+  },
+  "author": "LokiTheShadySpirit",
+  "license": "ISC"
+}
