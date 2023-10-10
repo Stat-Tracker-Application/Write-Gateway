@@ -3,9 +3,16 @@
   "version": "1.0.0",
   "description": "The gateway that handels and redirects all write requests for the stat tracker applicaton",
   "main": "./Gateway/Gateway.js",
+  "type": "module",
   "scripts": {
+    "dev": " nodemon ./Gateway/Gateway.js",
     "test": "Test"
   },
   "author": "LokiTheShadySpirit",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.5.1",
+    "express": "^4.18.2",
+    "nodemon": "^3.0.1"
+  }
 }
