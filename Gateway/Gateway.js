@@ -14,9 +14,11 @@ gateway.use(bodyparser.json());
 gateway.use("/", routes);
 
 const options = {
-  ca: fs.readFileSync("./Certificates/intermediate.pem"),
-  key: fs.readFileSync("./Certificates/stattrackerapp.test.key"),
-  cert: fs.readFileSync("./Certificates/stattrackerapp.test.crt"),
+  requestCert: true,
+  rejectUnauthorized: false,
+  ca: fs.readFileSync("../Certificates/ca.crt"),
+  key: fs.readFileSync("../Certificates/server.key"),
+  cert: fs.readFileSync("../Certificates/server.crt"),
 };
 const server = https.createServer(options, gateway);
 
