@@ -1,5 +1,6 @@
 import express from "express";
 import https from "https";
+import http from "http";
 import bodyparser from "body-parser";
 import fs from "fs";
 
@@ -14,13 +15,14 @@ gateway.use(bodyparser.json());
 gateway.use("/", routes);
 
 const options = {
-  requestCert: true,
+  requestCert: false,
   rejectUnauthorized: false,
-  ca: fs.readFileSync("../Certificates/ca.crt"),
-  key: fs.readFileSync("../Certificates/server.key"),
-  cert: fs.readFileSync("../Certificates/server.crt"),
+  ca: fs.readFileSync("./Certs/ca.crt"),
+  key: fs.readFileSync("./Certs/localhost.key"),
+  cert: fs.readFileSync("./Certs/localhost.crt"),
 };
-const server = https.createServer(options, gateway);
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; //dirty fix as discussed
+const server = http.createServer(options, gateway);
 
 server.listen(port, function (req, res) {
   console.log(`Gateway listening on ${port}`);
