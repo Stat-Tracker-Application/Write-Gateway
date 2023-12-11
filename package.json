@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": " nodemon ./Gateway/Gateway.js",
-    "test": "Test"
+    "test": "jest"
   },
   "author": "LokiTheShadySpirit",
   "license": "ISC",
