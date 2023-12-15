@@ -3,9 +3,9 @@ import axios from "axios";
 
 const router = express.Router();
 
-const userapibasestring = "http://User-Api:5200/";
-const statapibasestring = "http://Stat-Api:5100/";
-const authapibasestring = "http://Auth-Api:5300/";
+const statapibasestring = `http://${process.env.STATAPI_URL}/`;
+const userapibasestring = `http://${process.env.USERAPI_URL}/`;
+const authapibasestring = `http://${process.env.AUTHAPI_URL}/`;
 
 //Authentictaion middleware
 async function AuthenticateToken(req, res, next) {
@@ -32,16 +32,23 @@ router.all("/", function (req, res) {
   res.send("Hello world from gateway");
 });
 
-router.all("/userapi", AuthenticateToken, function (req, res) {
+router.all("/userapi", function (req, res) {
   console.log("Sending a request to the user api");
   axios.get(`${userapibasestring}`).then(function (response) {
     res.json(response.data).send();
   });
 });
 
-router.all("/statapi", AuthenticateToken, function (req, res) {
+router.all("/statapi", function (req, res) {
   console.log("Sending a request to the stat api");
   axios.get(`${statapibasestring}`).then(function (response) {
+    res.json(response.data).send();
+  });
+});
+
+router.all("/authapi", function (req, res) {
+  console.log("Sending a request to the auth api");
+  axios.get(`${authapibasestring}`).then(function (response) {
     res.json(response.data).send();
   });
 });

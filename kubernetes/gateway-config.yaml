@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-config
+data:
+  statapiurl: stat-api:5100
+  userapiurl: user-api:5200
+  authapiurl: auth-api:5300
