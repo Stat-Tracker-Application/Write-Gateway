@@ -28,6 +28,14 @@ async function AuthenticateToken(req, res, next) {
   }
 }
 
+// Middleware to use the incoming request body as the request body for /authapi/user/signup
+function UseRequestBodyForSignup(req, res, next) {
+  // Use the entire request body as the body for the new request
+  req.signupRequestBody = req.body;
+
+  next();
+}
+
 router.all("/", function (req, res) {
   res.send("Hello world from gateway");
 });
@@ -53,13 +61,17 @@ router.all("/authapi", function (req, res) {
   });
 });
 
-router.all("/authapi/user/signup", function (req, res) {
-  console.log("Singing up a user");
-  axios
-    .post(`${authapibasestring}user/signup`, req.body)
-    .then(function (response) {
-      res.json(response.data);
-    });
-});
+router.all(
+  "/authapi/user/signup",
+  UseRequestBodyForSignup,
+  function (req, res) {
+    console.log("Singing up a user");
+    axios
+      .post(`${authapibasestring}user/signup`, req.signupRequestBody)
+      .then(function (response) {
+        res.json(response.data);
+      });
+  }
+);
 
 export default router;
