@@ -53,4 +53,11 @@ router.all("/authapi", function (req, res) {
   });
 });
 
+router.all("authapi/user/signup", function (req, res) {
+  console.log("Singing up a user");
+  axios.post(`${authapibasestring}/user/signup`).then(function (response) {
+    res.json(response.data);
+  });
+});
+
 export default router;
