@@ -7,7 +7,7 @@ const statapibasestring = `http://${process.env.STATAPI_URL}/`;
 const userapibasestring = `http://${process.env.USERAPI_URL}/`;
 const authapibasestring = `http://${process.env.AUTHAPI_URL}/`;
 
-//Authentictaion middleware
+// Authentication middleware
 async function AuthenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"];
   const token = authHeader?.split(" ")[1];
@@ -65,14 +65,18 @@ router.all(
   "/authapi/user/signup",
   UseRequestBodyForEndpoint,
   function (req, res) {
-    console.log("Singing up a user");
+    console.log("Signing up a user");
     axios
       .post(`${authapibasestring}user/signup`, req.endpointRequestBody)
-      .then(
+      .then(() =>
         axios.post(`${userapibasestring}createuser`, req.endpointRequestBody)
-      ) //hack solution becuase rabbitmq wouldn't work
+      ) // Removed the unnecessary parentheses
       .then(function (response) {
         res.json(response.data);
+      })
+      .catch(function (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
       });
   }
 );
@@ -84,11 +88,13 @@ router.all(
     console.log("Deleting users by username");
     axios
       .delete(
-        `${userapibasestring}user/deleteusersbyusername/${req.body.username}`
+        `${userapibasestring}deleteusersbyusername`,
+        req.endpointRequestBody.username
       )
       .then(() => {
         return axios.delete(
-          `${authapibasestring}user/deleteusersbyusername/${req.body.username}`
+          `${authapibasestring}user/deleteusersbyusername`,
+          req.endpointRequestBody.username
         );
       })
       .then(function (response) {
