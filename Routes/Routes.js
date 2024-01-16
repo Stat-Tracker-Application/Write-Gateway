@@ -29,9 +29,9 @@ async function AuthenticateToken(req, res, next) {
 }
 
 // Middleware to use the incoming request body as the request body for /authapi/user/signup
-function UseRequestBodyForSignup(req, res, next) {
+function UseRequestBodyForEndpoint(req, res, next) {
   // Use the entire request body as the body for the new request
-  req.signupRequestBody = req.body;
+  req.endpointRequestBody = req.body;
 
   next();
 }
@@ -63,16 +63,29 @@ router.all("/authapi", function (req, res) {
 
 router.all(
   "/authapi/user/signup",
-  UseRequestBodyForSignup,
+  UseRequestBodyForEndpoint,
   function (req, res) {
     console.log("Singing up a user");
     axios
-      .post(`${authapibasestring}user/signup`, req.signupRequestBody)
-      .then(axios.post(`${userapibasestring}createuser`, req.signupRequestBody)) //hack solution becuase rabbitmq wouldn't work
+      .post(`${authapibasestring}user/signup`, req.endpointRequestBody)
+      .then(axios.post(`${userapibasestring}createuser`, req.endpointRequestBody)) //hack solution becuase rabbitmq wouldn't work
       .then(function (response) {
         res.json(response.data);
       });
   }
 );
+
+router.all(
+  "/deleteusersbyusername",
+  UseRequestBodyForEndpoint,
+  function (req, res) {
+    console.log("Singing up a user");
+    axios
+      .delete(`${userapibasestring}deleteusersbyusername`, req.endpointRequestBody)
+      .then(axios.delete(`${authapibasestring}user/deleteusersbyusername`, req.endpointRequestBody)) //hack solution becuase rabbitmq wouldn't work
+      .then(function (response) {
+        res.json(response.data);
+      });
+)
 
 export default router;
