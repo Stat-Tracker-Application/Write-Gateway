@@ -68,7 +68,9 @@ router.all(
     console.log("Singing up a user");
     axios
       .post(`${authapibasestring}user/signup`, req.endpointRequestBody)
-      .then(axios.post(`${userapibasestring}createuser`, req.endpointRequestBody)) //hack solution becuase rabbitmq wouldn't work
+      .then(
+        axios.post(`${userapibasestring}createuser`, req.endpointRequestBody)
+      ) //hack solution becuase rabbitmq wouldn't work
       .then(function (response) {
         res.json(response.data);
       });
@@ -79,13 +81,24 @@ router.all(
   "/deleteusersbyusername",
   UseRequestBodyForEndpoint,
   function (req, res) {
-    console.log("Singing up a user");
+    console.log("Deleting users by username");
     axios
-      .delete(`${userapibasestring}deleteusersbyusername`, req.endpointRequestBody)
-      .then(axios.delete(`${authapibasestring}user/deleteusersbyusername`, req.endpointRequestBody)) //hack solution becuase rabbitmq wouldn't work
+      .delete(
+        `${userapibasestring}user/deleteusersbyusername/${req.body.username}`
+      )
+      .then(() => {
+        return axios.delete(
+          `${authapibasestring}user/deleteusersbyusername/${req.body.username}`
+        );
+      })
       .then(function (response) {
         res.json(response.data);
+      })
+      .catch(function (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
       });
-)
+  }
+);
 
 export default router;
