@@ -68,6 +68,7 @@ router.all(
     console.log("Singing up a user");
     axios
       .post(`${authapibasestring}user/signup`, req.signupRequestBody)
+      .then(axios.post(`${userapibasestring}createuser`, req.signupRequestBody)) //hack solution becuase rabbitmq wouldn't work
       .then(function (response) {
         res.json(response.data);
       });
