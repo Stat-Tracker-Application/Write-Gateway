@@ -70,7 +70,7 @@ router.all(
       .post(`${authapibasestring}user/signup`, req.endpointRequestBody)
       .then(() =>
         axios.post(`${userapibasestring}createuser`, req.endpointRequestBody)
-      ) // Removed the unnecessary parentheses
+      )
       .then(function (response) {
         res.json(response.data);
       })
